@@ -13,38 +13,51 @@ const API = import.meta.env.VITE_API;
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [token, setToken] = useState();
+  const [token, setToken] = useState(null);
 
-  const register = async (credentials) => {
+  const register = async (username, password) => {
     const response = await fetch(API + "/users/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(credentials),
+       body: JSON.stringify({
+        username,
+        password,
+      }),
     });
     const result = await response.json();
     if (!response.ok) {
-      throw Error(result.message);
+      throw Error(result.message || "Registration failed");
     }
     setToken(result.token);
+    localStorage.setItem("token", result.token);
   };
 
-  const login = async (credentials) => {
+  const login = async (username, password) => {
     const response = await fetch(API + "/users/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(credentials),
+      body: JSON.stringify({
+        username,
+        password,
+      }),
     });
     const result = await response.json();
     if (!response.ok) {
-      throw Error(result.message);
+      throw Error(result.message || "Login failed");
     }
     setToken(result.token);
+    localStorage.setItem("token", result.token);
   };
 
-  const logout = () => setToken(null);
+ const logout = () => {
+    setToken(null);
+    localStorage.removeItem("token");
+  };
 
   const value = { token, register, login, logout };
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+  <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+);
 }
 
 export function useAuth() {

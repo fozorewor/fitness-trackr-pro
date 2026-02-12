@@ -12,6 +12,18 @@ export async function getActivities() {
   }
 }
 
+/** Fetch a single activity by ID */
+export async function getActivity(id) {
+  try {
+    const response = await fetch(API + "/activities/" + id);
+    const result = await response.json();
+    return result;
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+}
+
 /**
  * Sends a new activity to the API to be created.
  * A valid token is required.
@@ -36,6 +48,7 @@ export async function createActivity(token, activity) {
   }
 }
 
+
 /**
  * Requests the API to delete the activity with the given ID.
  * A valid token is required.
@@ -49,9 +62,18 @@ export async function deleteActivity(token, id) {
     method: "DELETE",
     headers: { Authorization: "Bearer " + token },
   });
+  if (response.status === 204) {
+    return;
+  }
+
+  const text = await response.text();
+  if (!text) {
+    return;
+  }
+  const result = JSON.parse(text);
 
   if (!response.ok) {
-    const result = await response.json();
     throw Error(result.message);
   }
+  return result;
 }

@@ -1,22 +1,25 @@
 import { useState } from "react";
 import { useAuth } from "./AuthContext";
-import { usePage } from "../layout/PageContext";
+import { Link, useNavigate } from "react-router-dom";
 
 /** A form that allows users to register for a new account */
 export default function Register() {
   const { register } = useAuth();
-  const { setPage } = usePage();
+  const navigate = useNavigate();
 
   const [error, setError] = useState(null);
 
-  const tryRegister = async (formData) => {
+  const tryRegister = async (e) => {
+    e.preventDefault();
     setError(null);
 
+    const formData = new FormData(e.target);
     const username = formData.get("username");
     const password = formData.get("password");
+
     try {
-      await register({ username, password });
-      setPage("activities");
+      await register(username, password);
+      navigate("/activities"); // redirect after successful registration
     } catch (e) {
       setError(e.message);
     }
@@ -24,22 +27,27 @@ export default function Register() {
 
   return (
     <>
-      <h1>Register for an account</h1>
-      <form action={tryRegister}>
+      <h1>Register</h1>
+
+      <form onSubmit={tryRegister}>
         <label>
           Username
-          <input type="text" name="username" required />
+          <input name="username" required />
         </label>
+
         <label>
           Password
           <input type="password" name="password" required />
         </label>
-        <button>Register</button>
-        {error && <p role="alert">{error}</p>}
+
+        <button type="submit">Register</button>
       </form>
-      <a onClick={() => setPage("login")}>
-        Already have an account? Log in here.
-      </a>
+
+      {error && <p role="alert">{error}</p>}
+
+      <p>
+        Already have an account? <Link to="/login">Login Here</Link>
+      </p>
     </>
   );
 }
