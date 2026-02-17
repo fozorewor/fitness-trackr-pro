@@ -45,10 +45,10 @@ export async function createRoutine(token, routine) {
     throw Error(result?.message || "Failed to create routine");
   }
 
-  return result; // 201 created returns the routine object :contentReference[oaicite:2]{index=2}
+  return result;
 }
 
-/** DELETE /routines/:id -> 204 no content (token required; must be creator) */
+/** DELETE /routines/:id return 204 no content (token required; must be creator) */
 export async function deleteRoutine(token, id) {
   if (!token) throw Error("You must be signed in to delete a routine.");
 
@@ -57,7 +57,7 @@ export async function deleteRoutine(token, id) {
     headers: { Authorization: "Bearer " + token },
   });
 
-  // 204 expected :contentReference[oaicite:3]{index=3}
+  
   if (response.status === 204) return;
 
   const result = await safeJson(response);
@@ -67,7 +67,7 @@ export async function deleteRoutine(token, id) {
   return result;
 }
 
-/** POST /sets -> add set to routine (token required; must be routine creator) */
+/** POST /sets, add a new set to routine (token required; must be routine creator) */
 export async function addSet(token, { activityId, routineId, count }) {
   if (!token) throw Error("You must be signed in to add a set.");
 
@@ -90,10 +90,10 @@ export async function addSet(token, { activityId, routineId, count }) {
     throw Error(result?.message || "Failed to add set");
   }
 
-  return result; // 201 returns new set object :contentReference[oaicite:4]{index=4}
+  return result;
 }
 
-/** DELETE /sets/:id -> 204 no content (token required) */
+/** DELETE /sets/:id return 204 no content (token required) */
 export async function deleteSet(token, setId) {
   if (!token) throw Error("You must be signed in to delete a set.");
 
@@ -102,7 +102,7 @@ export async function deleteSet(token, setId) {
     headers: { Authorization: "Bearer " + token },
   });
 
-  // 204 expected :contentReference[oaicite:5]{index=5}
+ 
   if (response.status === 204) return;
 
   const result = await safeJson(response);

@@ -23,7 +23,7 @@ export default function RoutineDetails() {
   async function loadRoutine() {
     setError(null);
     try {
-      // API does not provide get routine by id; fetch all and pick one :contentReference[oaicite:6]{index=6}
+      // API does not provide get routine by id; fetch all and pick one 
       const routines = await getRoutines();
       const found = routines.find((r) => r.id === routineId);
       setRoutine(found || null);
@@ -46,7 +46,6 @@ export default function RoutineDetails() {
   useEffect(() => {
     loadRoutine();
     loadActivities();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [routineId]);
 
   const sets = useMemo(() => routine?.sets || [], [routine]);
