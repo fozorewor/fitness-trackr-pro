@@ -19,8 +19,7 @@ export default function Register() {
 
     try {
       await register(username, password);
-      // redirect after successful registration
-      navigate("/activities");
+      navigate("/activities"); // redirect after successful registration
     } catch (e) {
       setError(e.message);
     }
