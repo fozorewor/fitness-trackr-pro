@@ -13,7 +13,7 @@ const API = import.meta.env.VITE_API;
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState(localStorage.getItem("token"));
 
   const register = async (username, password) => {
     const response = await fetch(API + "/users/register", {
